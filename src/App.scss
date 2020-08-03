@@ -38,6 +38,8 @@
 .article {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+
   height: 100vh;
   font-size: 18px;
 }

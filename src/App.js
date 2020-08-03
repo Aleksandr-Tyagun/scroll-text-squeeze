@@ -7,15 +7,15 @@ import "./App.scss";
 const settings = {
   delay: "3s",
   ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-  divider: 3,
+  divider: 4,
 };
 
 const THRESHOLD = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
 
 function App() {
   const [style, setStyle] = useState();
-  const [elementStyle20, setElementStyle20] = useState();
   const [elementStyle40, setElementStyle40] = useState();
+  const [elementStyle80, setElementStyle80] = useState();
 
   useScrollPosition(
     ({ prevPos, currPos }) => {
@@ -36,17 +36,17 @@ function App() {
       return base - entry.intersectionRatio * base;
     };
 
-    const style20 = {
+    const style40 = {
       transform: `translate3d(0, ${translateY(40, entry)}px, 0)`,
       transition: `transform ${settings.delay} ${settings.ease}`,
     };
-    const style40 = {
+    const style80 = {
       transform: `translate3d(0, ${translateY(80, entry)}px, 0)`,
       transition: `transform ${settings.delay} ${settings.ease}`,
     };
 
-    setElementStyle20(style20);
     setElementStyle40(style40);
+    setElementStyle80(style80);
   };
 
   return (
@@ -65,7 +65,6 @@ function App() {
               <p>ipsum, dolor, sit</p>
             </div>
           </div>
-          <hr />
         </div>
         <InView
           as="div"
@@ -78,35 +77,28 @@ function App() {
               <p>malesuada pellentesque</p>
             </div>
             <div className="element__text">
-              <p style={elementStyle20}>Lorem ipsum dolor sit amet</p>
-              <p style={elementStyle20}>consectetur adipiscing elit</p>
+              <p style={elementStyle40}>Lorem ipsum dolor sit amet</p>
+              <p style={elementStyle40}>consectetur adipiscing elit</p>
             </div>
             <div className="element__tags">
-              <p style={elementStyle40}>ipsum, dolor, sit</p>
+              <p style={elementStyle80}>ipsum, dolor, sit</p>
             </div>
           </div>
-          <hr />
         </InView>
-        <InView
-          as="div"
-          className="article"
-          threshold={THRESHOLD}
-          onChange={handleInView}
-        >
+        <div className="article">
           <div className="element">
             <div className="element__header">
               <p>malesuada pellentesque</p>
             </div>
             <div className="element__text">
-              <p style={elementStyle20}>Lorem ipsum dolor sit amet</p>
-              <p style={elementStyle20}>consectetur adipiscing elit</p>
+              <p>Lorem ipsum dolor sit amet</p>
+              <p>consectetur adipiscing elit</p>
             </div>
             <div className="element__tags">
-              <p style={elementStyle40}>ipsum, dolor, sit</p>
+              <p>ipsum, dolor, sit</p>
             </div>
           </div>
-          <hr />
-        </InView>
+        </div>
       </div>
     </div>
   );
