@@ -24,11 +24,11 @@ function App() {
         transition: `transform ${settings.delay} ${settings.ease}`,
       };
       setStyle(style);
-    }
-    // null,
-    // null,
-    // false,
-    // 300
+    },
+    null,
+    null,
+    false,
+    300
   );
 
   const handleInView = (inView, entry) => {
