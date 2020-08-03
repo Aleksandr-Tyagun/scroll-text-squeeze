@@ -14,13 +14,20 @@
   margin-top: 50px;
   margin-bottom: 50px;
 
+  &__header p {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+
   &__text p {
-    font-size: 24px;
+    font-size: 36px;
     margin: 0;
     padding-bottom: 5px;
   }
 
   &__tags p {
+    margin-top: 5px;
+    margin-bottom: 20px;
   }
 }
 
@@ -29,5 +36,8 @@
 }
 
 .article {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+  font-size: 18px;
 }
