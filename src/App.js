@@ -1,98 +1,102 @@
-import React, { useState } from "react";
-import { useScrollPosition } from "@n8tb1t/use-scroll-position";
-import { InView } from "react-intersection-observer";
+import React, { useEffect, useRef } from "react";
+import { useInView } from "react-intersection-observer";
 
 import "./App.scss";
 
 const settings = {
   delay: "3s",
   ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-  divider: 4,
+  threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+  translate: 30,
 };
 
-const THRESHOLD = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
-
 function App() {
-  const [style, setStyle] = useState();
-  const [elementStyle40, setElementStyle40] = useState();
-  const [elementStyle80, setElementStyle80] = useState();
+  const elementRef = useRef();
+  const [observeRef, inView, entry] = useInView({
+    threshold: settings.threshold,
+  });
 
-  useScrollPosition(
-    ({ prevPos, currPos }) => {
-      const style = {
-        transform: `translate3d(0, ${currPos.y / settings.divider}px, 0)`,
-        transition: `transform ${settings.delay} ${settings.ease}`,
-      };
-      setStyle(style);
-    },
-    null,
-    null,
-    false,
-    300
-  );
+  console.log(observeRef);
 
-  const handleInView = (inView, entry) => {
+  useEffect(() => {
+    if (!entry) {
+      return;
+    }
+
     const translateY = (base, entry) => {
       return base - entry.intersectionRatio * base;
     };
 
-    const style40 = {
-      transform: `translate3d(0, ${translateY(40, entry)}px, 0)`,
-      transition: `transform ${settings.delay} ${settings.ease}`,
-    };
-    const style80 = {
-      transform: `translate3d(0, ${translateY(80, entry)}px, 0)`,
-      transition: `transform ${settings.delay} ${settings.ease}`,
+    console.log(entry.intersectionRatio);
+
+    const styleConfig = (translateSize = 20) => {
+      return [
+        `transform: translate3d(0, ${translateY(translateSize, entry)}px, 0)`,
+        `transition: transform ${settings.delay} ${settings.ease}`,
+      ].join(";");
     };
 
-    setElementStyle40(style40);
-    setElementStyle80(style80);
-  };
+    const elementChildrenAmount = elementRef.current.childElementCount - 1;
+
+    for (let i = 0; i <= elementChildrenAmount; i++) {
+      if (i !== 0 && elementChildrenAmount) {
+        elementRef.current.children[i].style.cssText = styleConfig(
+          settings.translate
+        );
+      }
+      if (i === elementChildrenAmount) {
+        elementRef.current.children[i].style.cssText = styleConfig(
+          settings.translate * 2
+        );
+      }
+    }
+  }, [inView, entry]);
 
   return (
     <div className="App">
-      <div className="container" style={style}>
+      <div className="container">
         <div className="article">
           <div className="element">
             <div className="element__header">
               <p>malesuada pellentesque</p>
             </div>
             <div className="element__text">
-              <p>Lorem ipsum dolor sit amet</p>
-              <p>consectetur adipiscing elit</p>
+              <p>
+                Indiegogo superstar smart
+                <br /> clock which ease your life
+              </p>
             </div>
             <div className="element__tags">
               <p>ipsum, dolor, sit</p>
             </div>
           </div>
         </div>
-        <InView
-          as="div"
-          className="article"
-          threshold={THRESHOLD}
-          onChange={handleInView}
-        >
-          <div className="element">
+        <div className="article" ref={observeRef}>
+          <div className="element" ref={elementRef}>
             <div className="element__header">
               <p>malesuada pellentesque</p>
             </div>
             <div className="element__text">
-              <p style={elementStyle40}>Lorem ipsum dolor sit amet</p>
-              <p style={elementStyle40}>consectetur adipiscing elit</p>
+              <p>
+                Indiegogo superstar smart
+                <br /> clock which ease your life
+              </p>
             </div>
             <div className="element__tags">
-              <p style={elementStyle80}>ipsum, dolor, sit</p>
+              <p>ipsum, dolor, sit</p>
             </div>
           </div>
-        </InView>
+        </div>
         <div className="article">
           <div className="element">
             <div className="element__header">
               <p>malesuada pellentesque</p>
             </div>
             <div className="element__text">
-              <p>Lorem ipsum dolor sit amet</p>
-              <p>consectetur adipiscing elit</p>
+              <p>
+                Indiegogo superstar smart
+                <br /> clock which ease your life
+              </p>
             </div>
             <div className="element__tags">
               <p>ipsum, dolor, sit</p>
