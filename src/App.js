@@ -21,8 +21,8 @@ function App() {
       return;
     }
 
-    const translateY = (base, entry) => {
-      return base - entry.intersectionRatio * base;
+    const translateY = (base, { intersectionRatio }) => {
+      return base - intersectionRatio * base;
     };
 
     const styleConfig = (translateSize = 20) => {
