@@ -46,7 +46,7 @@ function App() {
         );
       }
     }
-  }, [inView, entry]);
+  }, [observeRef, inView, entry]);
 
   return (
     <div className="App">
