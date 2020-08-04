@@ -16,8 +16,6 @@ function App() {
     threshold: settings.threshold,
   });
 
-  console.log(observeRef);
-
   useEffect(() => {
     if (!entry) {
       return;
@@ -26,8 +24,6 @@ function App() {
     const translateY = (base, entry) => {
       return base - entry.intersectionRatio * base;
     };
-
-    console.log(entry.intersectionRatio);
 
     const styleConfig = (translateSize = 20) => {
       return [
