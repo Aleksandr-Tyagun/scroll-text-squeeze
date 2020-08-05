@@ -7,7 +7,8 @@ const settings = {
   delay: "3s",
   ease: "cubic-bezier(0.16, 1, 0.3, 1)",
   threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-  translate: 30,
+  translate: 40,
+  squeezeOut: true,
 };
 
 function App() {
@@ -16,37 +17,37 @@ function App() {
     threshold: settings.threshold,
   });
 
+  const styleConfig = (translateSize = 20, { intersectionRatio }) => {
+    const translate = translateSize - intersectionRatio * translateSize;
+
+    return [
+      `transform: translate3d(0, ${translate}px, 0)`,
+      `transition: transform ${settings.delay} ${settings.ease}`,
+    ].join(";");
+  };
+
   useEffect(() => {
-    if (!entry) {
+    if (!entry && !inView) {
       return;
     }
-
-    const translateY = (base, { intersectionRatio }) => {
-      return base - intersectionRatio * base;
-    };
-
-    const styleConfig = (translateSize = 20) => {
-      return [
-        `transform: translate3d(0, ${translateY(translateSize, entry)}px, 0)`,
-        `transition: transform ${settings.delay} ${settings.ease}`,
-      ].join(";");
-    };
 
     const elementChildrenAmount = elementRef.current.childElementCount - 1;
 
     for (let i = 0; i <= elementChildrenAmount; i++) {
       if (i !== 0 && elementChildrenAmount) {
         elementRef.current.children[i].style.cssText = styleConfig(
-          settings.translate
+          settings.translate,
+          entry
         );
       }
       if (i === elementChildrenAmount) {
         elementRef.current.children[i].style.cssText = styleConfig(
-          settings.translate * 2
+          settings.translate * 2,
+          entry
         );
       }
     }
-  }, [observeRef, inView, entry]);
+  }, [inView, entry]);
 
   return (
     <div className="App">
