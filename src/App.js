@@ -17,13 +17,13 @@ function buildThresholdList() {
 }
 
 const settings = {
-  delay: 3000,
+  delay: 2000,
   ease: "cubic-bezier(0.16, 1, 0.3, 1)",
   threshold: buildThresholdList(),
-  translate: 40,
+  translate: 60,
   squeezeOut: false,
   resetOnOutOfView: true,
-  rates: [1, 1, 2],
+  rates: [0, 1, 2],
 };
 
 function App() {
@@ -50,8 +50,6 @@ function App() {
     if (!entry) {
       return;
     }
-    console.clear();
-    console.log(entry);
 
     const elementChildrenAmount = elementRef.current.childElementCount - 1;
 
