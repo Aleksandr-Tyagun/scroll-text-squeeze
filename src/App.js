@@ -3,49 +3,83 @@ import { useInView } from "react-intersection-observer";
 
 import "./App.scss";
 
+function buildThresholdList() {
+  let thresholds = [];
+  let numSteps = 20;
+
+  for (let i=1.0; i<=numSteps; i++) {
+    let ratio = i/numSteps;
+    thresholds.push(ratio);
+  }
+
+  thresholds.push(0);
+  return thresholds;
+}
+
 const settings = {
-  delay: "3s",
+  delay: 3000,
   ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-  threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+  threshold: buildThresholdList(),
   translate: 40,
-  squeezeOut: true,
+  squeezeOut: false,
+  resetOnOutOfView: true,
+  rates: [1, 1, 2],
 };
 
 function App() {
-  const elementRef = useRef();
+  const elementRef = useRef(null);
+  const intersectionRatio = useRef(0);
+
   const [observeRef, inView, entry] = useInView({
     threshold: settings.threshold,
   });
 
-  const styleConfig = (translateSize = 20, { intersectionRatio }) => {
+  const styleConfig = (translateSize = 20, intersectionRatio) => {
     const translate = translateSize - intersectionRatio * translateSize;
 
     return [
       `transform: translate3d(0, ${translate}px, 0)`,
-      `transition: transform ${settings.delay} ${settings.ease}`,
+      `transition: transform ${settings.delay}ms ${settings.ease}`,
     ].join(";");
   };
 
   useEffect(() => {
-    if (!entry && !inView) {
+    if (!inView && settings.resetOnOutOfView) {
+      intersectionRatio.current = 0;
+    }
+    if (!entry) {
       return;
     }
+    console.clear();
+    console.log(entry);
 
     const elementChildrenAmount = elementRef.current.childElementCount - 1;
+
+    elementRef.current.style.cssText = styleConfig(
+      settings.translate * settings.rates[0],
+      intersectionRatio.current 
+    );
 
     for (let i = 0; i <= elementChildrenAmount; i++) {
       if (i !== 0 && elementChildrenAmount) {
         elementRef.current.children[i].style.cssText = styleConfig(
-          settings.translate,
-          entry
+          settings.translate * settings.rates[1],
+          intersectionRatio.current 
         );
       }
       if (i === elementChildrenAmount) {
         elementRef.current.children[i].style.cssText = styleConfig(
-          settings.translate * 2,
-          entry
+          settings.translate * settings.rates[2],
+          intersectionRatio.current
         );
       }
+    }
+
+    if (
+      entry.intersectionRatio > intersectionRatio.current ||
+      settings.squeezeOut
+    ) {
+      intersectionRatio.current = entry.intersectionRatio;
     }
   }, [inView, entry]);
 
