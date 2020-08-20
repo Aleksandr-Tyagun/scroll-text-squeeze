@@ -13,6 +13,7 @@
 .element {
   margin-top: 50px;
   margin-bottom: 50px;
+  border: 1px solid green;
 
   &__header p {
     font-size: 18px;
@@ -37,7 +38,9 @@
 
 .article {
   display: flex;
+  justify-content: center;
   flex-direction: column;
   height: 100vh;
   font-size: 18px;
+  border: 2px solid red;
 }
